@@ -1,5 +1,6 @@
 package com.marien.studi_jo_backend.services.customer.cart;
 
+import com.google.zxing.WriterException;
 import com.marien.studi_jo_backend.dto.AddTicketInCartDto;
 import com.marien.studi_jo_backend.dto.CartItemsDto;
 import com.marien.studi_jo_backend.dto.OrderDto;
@@ -9,11 +10,15 @@ import com.marien.studi_jo_backend.enums.OrderStatus;
 import com.marien.studi_jo_backend.enums.TicketStatus;
 import com.marien.studi_jo_backend.exceptions.ValidationException;
 import com.marien.studi_jo_backend.repository.*;
+import com.marien.studi_jo_backend.services.customer.qrcode.QrCodeService;
+import com.marien.studi_jo_backend.services.validation.NotificationService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +45,13 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private CouponRepository couponRepository;
 
+    @Autowired
+    private QrCodeService qrCodeService;
+
+
+
     public ResponseEntity<?> addTicketToCart(AddTicketInCartDto addTicketInCartDto){
-        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addTicketInCartDto.getUserId(), OrderStatus.RESERVE);
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addTicketInCartDto.getUserId(), OrderStatus.Pending);
         Optional<CartItems> optionalCartItems = cartItemsRepository.findByTicketIdAndOrderIdAndUserId(addTicketInCartDto.getTicketId(),
                 activeOrder.getId(), addTicketInCartDto.getUserId());
 
@@ -77,7 +87,7 @@ public class CartServiceImpl implements CartService {
     }
 
     public OrderDto getCartByUSerId(Long userId){
-        Order activeOrder  = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.RESERVE);
+        Order activeOrder  = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
         List<CartItemsDto> cartItemsDtoList =activeOrder.getCartItems().stream().map(CartItems::getCartDto).collect(Collectors.toList());
 
         OrderDto orderDto= new OrderDto();
@@ -97,7 +107,7 @@ public class CartServiceImpl implements CartService {
 
 
     public OrderDto applyCoupon(Long userId, String code){
-        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.RESERVE);
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
         Coupon coupon = couponRepository.findByCode(code).orElseThrow(() -> new ValidationException("Coupon not found."));
 
         if (couponIsExpired(coupon)){
@@ -126,7 +136,7 @@ public class CartServiceImpl implements CartService {
 
     public OrderDto increaseProductQuantity(AddTicketInCartDto addTicketInCartDto){
         // Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addProductInCartDto.getUserId(), OrderStatus.Pending);
-        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addTicketInCartDto.getUserId(), OrderStatus.RESERVE);
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addTicketInCartDto.getUserId(), OrderStatus.Pending);
         Optional<Ticket> optionalTicket= ticketRepository.findById(addTicketInCartDto.getTicketId());
 
         Optional<CartItems> optionalCartItem= cartItemsRepository.findByTicketIdAndOrderIdAndUserId(
@@ -163,7 +173,7 @@ public class CartServiceImpl implements CartService {
 
     public OrderDto decreaseProductQuantity(AddTicketInCartDto addTicketInCartDto){
         //TicketOrder activeOrder = orderRepository.findByUserIdAndOrderStatus(addProductInCartDto.getUserId(), OrderStatus.Pending);
-        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addTicketInCartDto.getUserId(), OrderStatus.RESERVE);
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addTicketInCartDto.getUserId(), OrderStatus.Pending);
         Optional<Ticket> optionalTicket= ticketRepository.findById(addTicketInCartDto.getTicketId());
 
         Optional<CartItems> optionalCartItem= cartItemsRepository.findByTicketIdAndOrderIdAndUserId(
@@ -194,18 +204,22 @@ public class CartServiceImpl implements CartService {
         return null;
     }
 
-    public OrderDto placeOrder(PlaceOrderDto placeOrderDto){
-        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(placeOrderDto.getUserId(), OrderStatus.RESERVE);
-
+    public OrderDto placeOrder(PlaceOrderDto placeOrderDto) throws IOException, WriterException, MessagingException {
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(placeOrderDto.getUserId(), OrderStatus.Pending);
+       // Optional<CartItems> optionalCartItems = cartItemsRepository.findByUserId(placeOrderDto.getUserId());
         Optional<User> optionalUser = userRepository.findById(placeOrderDto.getUserId());
         if (optionalUser.isPresent()){
             activeOrder.setOrdersDescription(placeOrderDto.getOrderDescription());
             activeOrder.setEmail(placeOrderDto.getEmail());
             activeOrder.setDate(new Date());
-            activeOrder.setOrderStatus(OrderStatus.VENDU);
+            activeOrder.setOrderStatus(OrderStatus.Delivered);
             activeOrder.setTrackingId(UUID.randomUUID());
 
             orderRepository.save(activeOrder);
+            qrCodeService.generateQrCode(activeOrder);
+            // remove cart items
+            //cartItemsRepository.deleteById(placeOrderDto.getUserId());
+
 
             // Create a new cart for the user
             Order order= new Order();
@@ -213,7 +227,7 @@ public class CartServiceImpl implements CartService {
             order.setTotalAmount(0l);
             order.setDiscount(0l);
             order.setUser(optionalUser.get());
-            order.setOrderStatus(OrderStatus.RESERVE);
+            order.setOrderStatus(OrderStatus.Pending);
             orderRepository.save(order);
 
             return activeOrder.getOrderDto();
@@ -224,7 +238,7 @@ public class CartServiceImpl implements CartService {
 
     public List<OrderDto> getMyPlacedOrders(Long userId){
 
-        return orderRepository.findByUserIdAndOrderStatusIn(userId, List.of(OrderStatus.RESERVE, OrderStatus.VENDU))
+        return orderRepository.findByUserIdAndOrderStatusIn(userId, List.of(OrderStatus.Pending, OrderStatus.Delivered))
                 .stream().map(Order::getOrderDto).collect(Collectors.toList());
 
     }
@@ -236,6 +250,18 @@ public class CartServiceImpl implements CartService {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean removeCartById(Long cartId) {
+        Optional<CartItems> optionalCartItems = cartItemsRepository.findById(cartId);
+
+        if(optionalCartItems.isPresent()){
+            cartItemsRepository.deleteById(cartId);
+            return true;
+        }
+        return false;
+
     }
 
 }

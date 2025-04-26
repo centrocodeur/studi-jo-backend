@@ -1,5 +1,7 @@
 package com.marien.studi_jo_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.marien.studi_jo_backend.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "users")
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"})
 public class User implements UserDetails {
 
     @Id

@@ -23,9 +23,11 @@ public class Ticket {
 
     private Long price;
 
+/*
     @Lob
     @Column(columnDefinition = "longblob")
     private byte[] img;
+*/
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
@@ -33,16 +35,31 @@ public class Ticket {
     @JsonIgnore
     private TicketCategory ticketCategory;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "competition_id", nullable = false )
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Competition competition;
+
+
+
     public TicketDto getDto(){
         TicketDto ticketDto= new TicketDto();
 
         ticketDto.setId(id);
 
+        ticketDto.setTitle(title);
         ticketDto.setPrice(price);
         ticketDto.setDescription(description);
-        ticketDto.setByteImg(img);
+        //ticketDto.setByteImg(img);
         ticketDto.setCategoryId(ticketCategory.getId());
         ticketDto.setCategoryName(ticketCategory.getName());
+        ticketDto.setCompetitionId(competition.getId());
+        ticketDto.setByteImg(competition.getImg());
+        ticketDto.setCompetitionName(competition.getName());
+        ticketDto.setCompDate(competition.getCompDate());
+        ticketDto.setCompTime(competition.getCompTime());
+        ticketDto.setSite(competition.getSite());
 
         return ticketDto;
     }

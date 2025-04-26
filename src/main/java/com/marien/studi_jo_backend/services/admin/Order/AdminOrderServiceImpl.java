@@ -21,7 +21,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     public List<OrderDto> getAllPlaceOrder(){
 
-        List<Order> orderList = orderRepository.findAllByOrderStatusIn(List.of(OrderStatus.DISPONIBLE, OrderStatus.RESERVE, OrderStatus.VENDU));
+        List<Order> orderList = orderRepository.findAllByOrderStatusIn(List.of(OrderStatus.placed, OrderStatus.Pending, OrderStatus.Delivered));
 
         return orderList.stream().map(Order::getOrderDto).collect(Collectors.toList());
     }
@@ -31,10 +31,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         if(optionalOrder.isPresent()){
             Order order = optionalOrder.get();
 
-            if(Objects.equals(status, "RESERVE")){
-                order.setOrderStatus(OrderStatus.RESERVE);
-            }else if(Objects.equals(status,"VENDU")){
-                order.setOrderStatus(OrderStatus.VENDU);
+            if(Objects.equals(status, "shipped")){
+                order.setOrderStatus(OrderStatus.Shipped);
+            }else if(Objects.equals(status,"Delivered")){
+                order.setOrderStatus(OrderStatus.Delivered);
 
             }
             return orderRepository.save(order).getOrderDto();
@@ -55,9 +55,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         Long previousMonthEarnings= getTotalEarningsForMonth(previousMonthDate.getMonthValue(), previousMonthDate.getYear());
 
 
-        Long placed = orderRepository.countByOrderStatus(OrderStatus.DISPONIBLE);
-        Long shipped = orderRepository.countByOrderStatus(OrderStatus.RESERVE);
-        Long delivered = orderRepository.countByOrderStatus(OrderStatus.VENDU);
+        Long placed = orderRepository.countByOrderStatus(OrderStatus.Pending);
+        Long shipped = orderRepository.countByOrderStatus(OrderStatus.Shipped);
+        Long delivered = orderRepository.countByOrderStatus(OrderStatus.Delivered);
 
         return new AnalyticsResponse(placed, shipped, delivered, currentMonthOrders, previousMonthOrders,
                 currentMonthEarnings,previousMonthEarnings);
@@ -85,7 +85,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         Date endOfMonth = calendar.getTime();
 
-        List<Order> orders = orderRepository.findByDateBetweenAndOrderStatus(startOfMonth, endOfMonth, OrderStatus.VENDU);
+        List<Order> orders = orderRepository.findByDateBetweenAndOrderStatus(startOfMonth, endOfMonth, OrderStatus.Delivered);
 
         return  (long)orders.size();
 
@@ -113,7 +113,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         Date endOfMonth = calendar.getTime();
 
-        List<Order> orders = orderRepository.findByDateBetweenAndOrderStatus(startOfMonth, endOfMonth, OrderStatus.VENDU);
+        List<Order> orders = orderRepository.findByDateBetweenAndOrderStatus(startOfMonth, endOfMonth, OrderStatus.Delivered);
 
         Long sum = 0L;
 

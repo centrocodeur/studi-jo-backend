@@ -1,13 +1,15 @@
 package com.marien.studi_jo_backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.marien.studi_jo_backend.dto.CompetitionDto;
+import com.marien.studi_jo_backend.dto.TicketDto;
+import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
 @Entity
+@Table(name = "competitions")
+@Data
 public class Competition {
 
     @Id
@@ -16,7 +18,28 @@ public class Competition {
 
     private String name;
 
-    private Date competDate;
+    private String compDate;
+
+    private String compTime;
 
     private String site;
+
+    @Lob
+    @Column(columnDefinition = "longblob")
+    private byte[] img;
+
+
+    public CompetitionDto getDto(){
+
+        CompetitionDto competitionDto = new CompetitionDto();
+
+        competitionDto.setId(id);
+        competitionDto.setName(name);
+        competitionDto.setCompDate(compDate);
+        competitionDto.setCompTime(compTime);
+        competitionDto.setSite(site);
+        competitionDto.setByteImg(img);
+
+        return competitionDto;
+    }
 }
