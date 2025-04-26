@@ -41,7 +41,8 @@ public class CartItems {
         cartItemsDto.setQuantity(quantity);
         cartItemsDto.setUserId(user.getId());
         cartItemsDto.setTicketTitle(ticket.getTitle());
-        cartItemsDto.setReturnedImg(ticket.getImg());
+        //cartItemsDto.setReturnedImg(ticket.getImg());
+        cartItemsDto.setReturnedImg(ticket.getCompetition().getImg());
 
         return cartItemsDto;
     }

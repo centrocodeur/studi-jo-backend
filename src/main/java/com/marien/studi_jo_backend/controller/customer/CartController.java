@@ -1,16 +1,19 @@
 package com.marien.studi_jo_backend.controller.customer;
 
 
+import com.google.zxing.WriterException;
 import com.marien.studi_jo_backend.dto.AddTicketInCartDto;
 import com.marien.studi_jo_backend.dto.OrderDto;
 import com.marien.studi_jo_backend.dto.PlaceOrderDto;
 import com.marien.studi_jo_backend.exceptions.ValidationException;
 import com.marien.studi_jo_backend.services.customer.cart.CartService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -57,12 +60,12 @@ public class CartController {
 
 
     @PostMapping("/ticket/placeOrder")
-    public ResponseEntity<OrderDto> placeOrder(@RequestBody PlaceOrderDto placeOrderDto){
+    public ResponseEntity<OrderDto> placeOrder(@RequestBody PlaceOrderDto placeOrderDto) throws IOException, WriterException, MessagingException {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.placeOrder(placeOrderDto));
     }
 
 
-    @GetMapping("/cart/myOrders/{userId}")
+    @GetMapping("/myOrders/{userId}")
     public ResponseEntity<List<OrderDto>> getMyPlacedOrders(@PathVariable Long userId){
         return ResponseEntity.ok(cartService.getMyPlacedOrders(userId));
     }

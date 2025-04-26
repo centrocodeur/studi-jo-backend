@@ -24,5 +24,18 @@ public class TicketDto {
 
     private Long quantity;
 
+    /* Add competition */
+    private Long competitionId;
+
+    private String competitionName;
+
+    private String compDate;
+
+    private String compTime;
+
+    private String site;
+
+
+
 
 }
