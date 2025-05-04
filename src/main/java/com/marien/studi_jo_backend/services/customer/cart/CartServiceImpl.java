@@ -86,6 +86,37 @@ public class CartServiceImpl implements CartService {
         }
     }
 
+
+
+    public boolean deleteTicket(Long id){
+        Optional<Ticket> optionalTicket = ticketRepository.findById(id);
+
+        if(optionalTicket.isPresent()){
+            ticketRepository.deleteById(id);
+            return true;
+        }
+        return false;
+
+    }
+
+
+    public boolean removeCartByUserId(Long userId) {
+        Order activeOrder  = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
+
+        if(activeOrder.getTrackingId()==null  && activeOrder.getAmount() !=null ){
+            activeOrder.setAmount(0L);
+            activeOrder.setTotalAmount(0L);
+            return true;
+        }
+
+
+        return false;
+
+    }
+
+
+
+
     public OrderDto getCartByUSerId(Long userId){
         Order activeOrder  = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
         List<CartItemsDto> cartItemsDtoList =activeOrder.getCartItems().stream().map(CartItems::getCartDto).collect(Collectors.toList());
@@ -104,6 +135,7 @@ public class CartServiceImpl implements CartService {
 
         return orderDto;
     }
+
 
 
     public OrderDto applyCoupon(Long userId, String code){
@@ -206,11 +238,12 @@ public class CartServiceImpl implements CartService {
 
     public OrderDto placeOrder(PlaceOrderDto placeOrderDto) throws IOException, WriterException, MessagingException {
         Order activeOrder = orderRepository.findByUserIdAndOrderStatus(placeOrderDto.getUserId(), OrderStatus.Pending);
-       // Optional<CartItems> optionalCartItems = cartItemsRepository.findByUserId(placeOrderDto.getUserId());
+        //Optional<CartItems> optionalCartItems = cartItemsRepository.findByUserId(placeOrderDto.getUserId());
         Optional<User> optionalUser = userRepository.findById(placeOrderDto.getUserId());
         if (optionalUser.isPresent()){
             activeOrder.setOrdersDescription(placeOrderDto.getOrderDescription());
-            activeOrder.setEmail(placeOrderDto.getEmail());
+            //activeOrder.setOrdersDescription(optionalCartItems.get().getTicket().getDescription());
+            activeOrder.setPayment(placeOrderDto.getPayment());
             activeOrder.setDate(new Date());
             activeOrder.setOrderStatus(OrderStatus.Delivered);
             activeOrder.setTrackingId(UUID.randomUUID());
@@ -238,7 +271,7 @@ public class CartServiceImpl implements CartService {
 
     public List<OrderDto> getMyPlacedOrders(Long userId){
 
-        return orderRepository.findByUserIdAndOrderStatusIn(userId, List.of(OrderStatus.Pending, OrderStatus.Delivered))
+        return orderRepository.findByUserIdAndOrderStatusIn(userId, List.of(OrderStatus.Delivered))
                 .stream().map(Order::getOrderDto).collect(Collectors.toList());
 
     }
@@ -252,16 +285,5 @@ public class CartServiceImpl implements CartService {
         return null;
     }
 
-    @Override
-    public boolean removeCartById(Long cartId) {
-        Optional<CartItems> optionalCartItems = cartItemsRepository.findById(cartId);
-
-        if(optionalCartItems.isPresent()){
-            cartItemsRepository.deleteById(cartId);
-            return true;
-        }
-        return false;
-
-    }
 
 }

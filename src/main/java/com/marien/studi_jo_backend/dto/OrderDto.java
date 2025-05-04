@@ -1,6 +1,7 @@
 package com.marien.studi_jo_backend.dto;
 
 import com.marien.studi_jo_backend.enums.OrderStatus;
+import com.marien.studi_jo_backend.enums.PaymentType;
 import lombok.Data;
 
 import java.util.Date;
@@ -20,7 +21,7 @@ public class OrderDto {
 
     private String email;
 
-    private String payment;
+    private PaymentType payment;
 
     private OrderStatus orderStatus;
 

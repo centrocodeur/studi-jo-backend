@@ -59,6 +59,7 @@ public class Ticket {
         ticketDto.setCompetitionName(competition.getName());
         ticketDto.setCompDate(competition.getCompDate());
         ticketDto.setCompTime(competition.getCompTime());
+        ticketDto.setCity(competition.getCity());
         ticketDto.setSite(competition.getSite());
 
         return ticketDto;

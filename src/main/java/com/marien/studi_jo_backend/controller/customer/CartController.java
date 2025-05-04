@@ -30,11 +30,22 @@ public class CartController {
         return cartService.addTicketToCart(addTicketInCartDto);
     }
 
+
     @GetMapping("/ticket_cart/{userId}")
     public ResponseEntity<?>getCartByUserId(@PathVariable Long userId){
         OrderDto orderDto = cartService.getCartByUSerId(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(orderDto);
+    }
+
+    @DeleteMapping("/ticket_cart/{userId}")
+    public ResponseEntity<?> deleteTicketFromCartByUserId(@PathVariable Long userId){
+        boolean deleted = cartService.removeCartByUserId(userId);
+
+        if(deleted){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/ticket/coupon/{userId}/{code}")
@@ -46,6 +57,8 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+
+
 
     @PostMapping("/ticket/addition")
     public ResponseEntity<OrderDto> increaseProductQuantity(@RequestBody AddTicketInCartDto addTicketInCartDto){

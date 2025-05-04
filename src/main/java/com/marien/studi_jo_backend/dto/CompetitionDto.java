@@ -20,6 +20,8 @@ public class CompetitionDto {
 
     private String site;
 
+    private String city;
+
     private byte[] byteImg;
 
     private MultipartFile img;

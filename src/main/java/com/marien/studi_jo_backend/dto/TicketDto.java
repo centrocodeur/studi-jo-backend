@@ -35,6 +35,8 @@ public class TicketDto {
 
     private String site;
 
+    private String city;
+
 
 
 

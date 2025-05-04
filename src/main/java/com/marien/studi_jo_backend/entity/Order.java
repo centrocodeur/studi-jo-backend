@@ -2,6 +2,7 @@ package com.marien.studi_jo_backend.entity;
 
 import com.marien.studi_jo_backend.dto.OrderDto;
 import com.marien.studi_jo_backend.enums.OrderStatus;
+import com.marien.studi_jo_backend.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.Data;
 
