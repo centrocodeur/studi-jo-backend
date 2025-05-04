@@ -29,5 +29,6 @@ public interface CartService {
 
     OrderDto  searchOrderByTrackingId(UUID trackingId);
 
-    boolean removeCartById(Long cartId);
+    //boolean removeCartById(Long cartId);
+   boolean removeCartByUserId(Long userId);
 }

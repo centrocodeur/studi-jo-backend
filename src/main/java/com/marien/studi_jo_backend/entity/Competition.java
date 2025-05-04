@@ -24,6 +24,9 @@ public class Competition {
 
     private String site;
 
+    private String city;
+
+
     @Lob
     @Column(columnDefinition = "longblob")
     private byte[] img;
@@ -38,6 +41,7 @@ public class Competition {
         competitionDto.setCompDate(compDate);
         competitionDto.setCompTime(compTime);
         competitionDto.setSite(site);
+        competitionDto.setCity(city);
         competitionDto.setByteImg(img);
 
         return competitionDto;

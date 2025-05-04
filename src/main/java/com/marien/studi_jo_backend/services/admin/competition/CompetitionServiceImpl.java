@@ -28,6 +28,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         competition.setCompDate(competitionDto.getCompDate());
         competition.setCompTime(competitionDto.getCompTime());
         competition.setSite(competitionDto.getSite());
+        competition.setCity(competitionDto.getCity());
         competition.setImg(competitionDto.getImg().getBytes());
 
         return competitionRepository.save(competition).getDto();
@@ -76,6 +77,7 @@ public class CompetitionServiceImpl implements CompetitionService {
            competition.setCompDate(competitionDto.getCompDate());
            competition.setCompTime(competitionDto.getCompTime());
            competition.setSite(competitionDto.getSite());
+           competition.setCity(competitionDto.getCity());
 
            if(competitionDto.getImg() !=null){
                competition.setImg(competitionDto.getImg().getBytes());

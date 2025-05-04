@@ -33,7 +33,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
             if(Objects.equals(status, "shipped")){
                 order.setOrderStatus(OrderStatus.Shipped);
-            }else if(Objects.equals(status,"Delivered")){
+            }else if(Objects.equals(status,"Envoyé")){
                 order.setOrderStatus(OrderStatus.Delivered);
 
             }

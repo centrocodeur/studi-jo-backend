@@ -38,7 +38,7 @@ public class CustomerTicketController {
     }
 
     @GetMapping("/ticket/{ticketId}")
-    public ResponseEntity<TicketDetailDto> getProductDetailById(@PathVariable Long ticketId) {
+    public ResponseEntity<TicketDetailDto> getTicketDetailById(@PathVariable Long ticketId) {
         TicketDetailDto ticketDetailDto = customerTicketService.getTicketDetailById(ticketId);
         if (ticketDetailDto == null) return ResponseEntity.notFound().build();
 
