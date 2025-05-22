@@ -30,7 +30,7 @@ public class ValidationServiceImpl implements ValidationService {
         validation.setUser(user);
         Instant creation =Instant.now();
         validation.setCreation(creation);
-        Instant expiration = creation.plus(20, MINUTES);
+        Instant expiration = creation.plus(30, MINUTES);
         validation.setExpiration(expiration);
         Random random = new Random();
         int randomInteger = random.nextInt(999999);

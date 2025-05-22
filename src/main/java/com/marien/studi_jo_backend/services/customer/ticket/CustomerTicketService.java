@@ -10,6 +10,8 @@ public interface CustomerTicketService {
     List<TicketDto> getAllTicket();
 
     List<TicketDto>searchTicketByTitle(String title);
+    List<TicketDto>searchTicketByDescription(String description);
+
 
 
 

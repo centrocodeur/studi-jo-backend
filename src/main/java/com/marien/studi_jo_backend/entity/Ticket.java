@@ -23,11 +23,6 @@ public class Ticket {
 
     private Long price;
 
-/*
-    @Lob
-    @Column(columnDefinition = "longblob")
-    private byte[] img;
-*/
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)

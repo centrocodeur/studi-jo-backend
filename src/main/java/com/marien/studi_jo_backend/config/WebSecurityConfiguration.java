@@ -30,6 +30,14 @@ public class WebSecurityConfiguration {
 
     private final JwtRequestFilter authFilter;
 
+    private static final String[] AUTH_WHITELIST={
+            "/api/v1/auth/**",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml/**",
+            "/swagger-ui/***",
+            "/swagger-ui.html"
+    };
+
     public WebSecurityConfiguration(JwtRequestFilter authFilter) {
         this.authFilter = authFilter;
     }
@@ -42,6 +50,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests( requests ->requests
                         .requestMatchers("/authenticate", "sign-up","activation", "/order/**", "/api/**")
                         .permitAll()
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

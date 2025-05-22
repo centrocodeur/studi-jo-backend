@@ -3,6 +3,7 @@ package com.marien.studi_jo_backend.controller.admin;
 import com.marien.studi_jo_backend.dto.AnalyticsResponse;
 import com.marien.studi_jo_backend.dto.OrderDto;
 import com.marien.studi_jo_backend.services.admin.Order.AdminOrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,13 @@ public class AdminOrderController {
     private final AdminOrderService adminOrderService;
 
     @GetMapping("/placedOrders")
+    @Operation(summary = "Liste de vente")
     public ResponseEntity<List<OrderDto>> getAllPlacedOrders(){
         return  ResponseEntity.ok(adminOrderService.getAllPlaceOrder());
     }
 
     @GetMapping("/order/{orderId}/{status}")
+    @Operation(summary = "CHanger le status des ventes")
     public ResponseEntity<?> changeOrderStatus(@PathVariable Long orderId, @PathVariable String status){
         OrderDto orderDto = adminOrderService.changeOrderStatus(orderId, status);
 
@@ -36,6 +39,7 @@ public class AdminOrderController {
     }
 
     @GetMapping("/order/analytics")
+    @Operation(summary = "Analyser les ventes")
     public ResponseEntity<AnalyticsResponse> getAnalytics(){
         return  ResponseEntity.ok(adminOrderService.calculateAnalytics());
     }

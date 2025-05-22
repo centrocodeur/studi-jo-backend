@@ -16,6 +16,7 @@ public class CartItems {
 
     private Long price;
 
+
     private Long quantity;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ticket_id", nullable = false)
