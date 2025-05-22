@@ -10,4 +10,6 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     List<Ticket> findAllByTitleContaining(String title);
+    List<Ticket> findAllByDescriptionContaining(String description);
+
 }

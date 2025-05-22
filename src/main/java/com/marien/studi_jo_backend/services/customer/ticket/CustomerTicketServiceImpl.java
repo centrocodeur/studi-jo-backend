@@ -36,6 +36,11 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         return tickets.stream().map(Ticket::getDto).collect(Collectors.toList());
     }
 
+    public List<TicketDto>searchTicketByDescription(String description){
+        List<Ticket> tickets = ticketRepository.findAllByDescriptionContaining(description);
+        return tickets.stream().map(Ticket::getDto).collect(Collectors.toList());
+    }
+
 
 
     @Override

@@ -8,6 +8,8 @@ import com.marien.studi_jo_backend.entity.User;
 import com.marien.studi_jo_backend.repository.UserRepository;
 import com.marien.studi_jo_backend.services.auth.AuthService;
 import com.marien.studi_jo_backend.utils.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@Tag(name = "authentication controller", description = "Creation de compte utilisateur")
 public class AuthController {
 
 
@@ -55,6 +58,7 @@ public class AuthController {
 
 
     @PostMapping("/authenticate")
+    @Operation(summary = "authentication", description = "connexion de l'utisateur à l'aide de mail et de mot de passe")
     public void createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
                                           HttpServletResponse response) throws IOException, JSONException {
 
@@ -87,6 +91,7 @@ public class AuthController {
 
 
     @PostMapping("sign-up")
+    @Operation(summary = "Inscription")
     public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
 
         if(authService.hasUserWithEmail(signupRequest.getEmail())){
@@ -102,6 +107,7 @@ public class AuthController {
 
 
     @PostMapping("activation")
+    @Operation(summary = "Activation de code")
     public ResponseEntity<?> activateUser(@RequestBody Map<String, String> activation){
         this.authService.accountActivation(activation);
 

@@ -2,6 +2,7 @@ package com.marien.studi_jo_backend.controller.admin;
 
 import com.marien.studi_jo_backend.dto.TicketDto;
 import com.marien.studi_jo_backend.services.admin.ticket.AdminTicketService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class AdminTicketController {
 
 
     @PostMapping("/ticket")
+    @Operation(summary = "Créer un ticket")
     public ResponseEntity<TicketDto> addTicket(@ModelAttribute TicketDto ticketDto) throws IOException {
 
         TicketDto ticketDto1= adminTicketService.addTicket(ticketDto);
@@ -29,6 +31,7 @@ public class AdminTicketController {
 
 
     @GetMapping("/tickets")
+    @Operation(summary = "Liste des tickets")
     public ResponseEntity<List<TicketDto>> getAllTickets(){
         List<TicketDto> ticketDtos = adminTicketService.getAllTicket();
 
@@ -36,6 +39,7 @@ public class AdminTicketController {
     }
 
     @GetMapping("/search/{title}")
+    @Operation(summary = "rechercher un ticket par ticket")
     public ResponseEntity<List<TicketDto>> getAllTicketByTitle(@PathVariable String title){
         List<TicketDto> ticketDtos = adminTicketService.getAllProductByTitle(title);
 
@@ -43,6 +47,7 @@ public class AdminTicketController {
     }
 
     @DeleteMapping("/ticket/{ticketId}")
+    @Operation(summary = "Supprimer un ticket")
     public  ResponseEntity<Void> deleteTicket(@PathVariable Long ticketId){
         boolean deleted = adminTicketService.deleteTicket(ticketId);
 
@@ -63,6 +68,7 @@ public class AdminTicketController {
 
 
     @GetMapping("/ticket/{ticketId}")
+    @Operation(summary = "Recherche de ticket à l'aide de l'indentification")
     public ResponseEntity<TicketDto> getTicketById(@PathVariable Long ticketId){
         TicketDto ticketDto= adminTicketService.getTicketById(ticketId);
         if(ticketDto!=null){
@@ -74,6 +80,7 @@ public class AdminTicketController {
 
 
     @PutMapping("/ticket/{ticketId}")
+    @Operation(summary = "Mettre à jour un ticket")
     public ResponseEntity<TicketDto> updateTicket(@PathVariable Long ticketId, @ModelAttribute TicketDto ticketDto) throws IOException {
         TicketDto updatedTicket = adminTicketService.updateTicket(ticketId, ticketDto);
 
