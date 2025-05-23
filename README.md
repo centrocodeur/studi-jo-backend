@@ -29,16 +29,27 @@ Cette application permet d'effectuer les opérations CRUD(Create, Read, Update, 
 
 ## Endpoints de l'API
 
-Les principaux endpoints sont:
+Custmomer 
 
+| Méthode | Endpoint      | Description                    | Exemple de corps de requête |
+|---------|---------------|--------------------------------|---------------------------------------------------------------------------------------------------|
+| GET     | `/api/customer/ticket_cart/{userId}`           | Rechercher un ticket par identifiant                                                              |
+| GET     | `/api/customer/ticket/coupon/{userId}/{code}`  | Utiliser un coupon de réduction                                                                   |
+| POST    | `/api/customer/ticket_cart`                    | Ajouter un ticket au panier `{"userId": 1, "ticketId":20}`                                        |
+| POST    | `/api/customer/ticket/addition`                | Augmenter le nombre de ticket du panier | `{"userId": 1, "ticketId":20}`                          |
+| POST    | `/api/customer/ticket/deduction`               | Diminuer le nombre de ticket du panier | `{"userId": 1, "ticketId":20}`                           |
+| POST    | `/api/customer/ticket/placeOrder`              | Payer de ticket du panier | `{"userId": 1, "payement":"VISA_CARD", "orderDescription": "Billet"}` |
+| DELETE  | `/api/customer/ticket_cart/{userId}`           | Supprimer un ticket du panier                                                                     |
+| GET     | `/api/customer/myOrders /{userId}`             | Supprimer un ticket du panier                                                                     | 
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
-| Méthode | Endpoint      | Description              | Exemple de corps de requête |
-|---------|---------------|--------------------------|-----------------------------|
-| GET     | `/api/books`  | Récupérer tous les livres | _N/A_                       |
-| GET     | `/api/books/{id}` | Récupérer un livre par son ID | _N/A_                   |
-| POST    | `/api/books`  | Ajouter un nouveau livre | `{"title": "1984", "author": "George Orwell"}` |
-| PUT     | `/api/books/{id}` | Mettre à jour un livre existant | `{"title": "Animal Farm", "author": "George Orwell"}` |
-| DELETE  |
+Authentification
+
+| Méthode | Endpoint      | Description                    | Exemple de corps de requête |  Format
+|---------|---------------|--------------------------------|---------------------------------------------------------------------------------------------------|
+| POST     | `/sign-up`                        | Inscription    | `{"firstname": "Dupont", "lastname": "Eric", "email":"dupan@gmail.com", "password": "rete233"}` |
+| POST     |`/authenticate`                    |  Authentication  |`{"username":"dupan@gmail.com" , "password": "rete233"}`  |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 ## Configuration
