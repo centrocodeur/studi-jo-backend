@@ -31,6 +31,8 @@ Cette application permet d'effectuer les opérations CRUD(Create, Read, Update, 
 
 Custmomer 
 
+Custmomer 
+
 | Méthode | Endpoint      | Description                    | Exemple de corps de requête |
 |---------|---------------|--------------------------------|---------------------------------------------------------------------------------------------------|
 | GET     | `/api/customer/ticket_cart/{userId}`           | Rechercher un ticket par identifiant                                                              |
@@ -41,15 +43,9 @@ Custmomer
 | POST    | `/api/customer/ticket/placeOrder`              | Payer de ticket du panier | `{"userId": 1, "payement":"VISA_CARD", "orderDescription": "Billet"}` |
 | DELETE  | `/api/customer/ticket_cart/{userId}`           | Supprimer un ticket du panier                                                                     |
 | GET     | `/api/customer/myOrders /{userId}`             | Supprimer un ticket du panier                                                                     | 
+| POST    | `/sign-up`                                     | Inscription    | `{"firstname": "Dupont", "lastname": "Eric", "email":"dupan@gmail.com", "password": "rete233"}` |
+| POST    |`/authenticate`                                 |  Authentication  |`{"username":"dupan@gmail.com" , "password": "rete233"}`                     |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-
-Authentification
-
-| Méthode | Endpoint      | Description                    | Exemple de corps de requête |  Format
-|---------|---------------|--------------------------------|---------------------------------------------------------------------------------------------------|
-| POST     | `/sign-up`                        | Inscription    | `{"firstname": "Dupont", "lastname": "Eric", "email":"dupan@gmail.com", "password": "rete233"}` |
-| POST     |`/authenticate`                    |  Authentication  |`{"username":"dupan@gmail.com" , "password": "rete233"}`  |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 ## Configuration
